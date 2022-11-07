@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { FaTh, FaThLarge, FaCircle, FaFilter } from "react-icons/fa";
 import ProductItem from "../../../features/Product/components/ProductItem/ProductItem";
-import RangeSlider from "../RangeSlider/RangeSlider";
+// import RangeSlider from "../RangeSlider/RangeSlider";
 import "./shop.scss";
 import categoryApi from "api/categoryApi";
 import Loading from "components/Loading/Loading";
@@ -22,6 +22,8 @@ export default function ShopBody() {
     total: 0,
     totalPage: 0,
   });
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);  
 
   const getAllProducts = useCallback(async () => {
     setIsLoading(true);
@@ -37,6 +39,7 @@ export default function ShopBody() {
       totalPage: res.pagination.totalPage,
     });
     setIsLoading(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.page, pagination.limit]);
 
   useEffect(() => {
@@ -47,7 +50,6 @@ export default function ShopBody() {
     const fetchCategory = async () => {
       try {
         const response = await categoryApi.getAll();
-        console.log(response);
         setCategories(response.data);
       } catch (error) {
         console.log("Failed to fetch category list", error);
@@ -56,6 +58,14 @@ export default function ShopBody() {
 
     fetchCategory();
   }, []);
+
+  const onChangeMinPrice = (e) => {
+    setMinPrice(e.target.value);
+  }
+
+  const onChangeMaxPrice = (e) => {
+    setMaxPrice(e.target.value);
+  }
 
   const handleClickIncrease = () => {
     setLoading(true);
@@ -66,6 +76,30 @@ export default function ShopBody() {
     }));
     setLoading(false);
   };
+
+  const handleSearchByCategory = async (categoryId) => {
+    try {
+      setIsLoading(true);
+      const res = await productApi.searchByCategory(categoryId);
+      setListProduct(res.data);
+      setIsLoading(false);
+    } catch (error) {
+      return;
+    }
+  }
+
+  const handleChangePrice = async() => {
+    try {
+      setIsLoading(true);
+      const res = await productApi.searchByPrice({minPrice: minPrice, maxPrice: maxPrice});
+      setTimeout(() => {
+        setListProduct(res.data);
+      }, 1000);
+      setIsLoading(false);
+    } catch (error) {
+      return;
+    }
+  }
 
   //hot product
   const hotProduct = listProduct.filter((product) => product.sold >= 40);
@@ -82,27 +116,49 @@ export default function ShopBody() {
             <div className="shopbody-filter-title">Product Categories</div>
             <div className="shopbody-filter-catelist">
               {categories.map((item, index) => {
-                return <div key={index}>{item.name}</div>;
+                return (
+                  <div
+                    key={index}
+                    onClick={() => handleSearchByCategory(item?._id)}
+                  >
+                    {item.name}
+                  </div>
+                );
               })}
-            </div>
-            <div className="shopbody-filter-line"></div>
-          </div>
-          <div className="shopbody-filter-size">
-            <div className="shopbody-filter-title">Size</div>
-            <div className="shopbody-filter-catelist">
-              <div>Small</div>
-              <div>Large</div>
-              <div>Medium</div>
             </div>
             <div className="shopbody-filter-line"></div>
           </div>
           <div className="shopbody-filter-price">
             <div className="shopbody-filter-title">Price</div>
           </div>
-          <div>
-            <RangeSlider />
+          {/* <div>
+            <RangeSlider value={range} setValue={setRange} />
+          </div> */}
+          <div className="shopbody-filter-range">
+            <div className="shopbody-filter-range__item">
+              <label htmlFor="min_price">From</label>
+              <input
+                type="number"
+                placeholder="Price"
+                id="min_price"
+                value={minPrice}
+                onChange={onChangeMinPrice}
+              />
+            </div>
+            <div className="shopbody-filter-range__item">
+              <label htmlFor="max_price">To</label>
+              <input
+                type="number"
+                placeholder="Price"
+                id="max_price"
+                value={maxPrice}
+                onChange={onChangeMaxPrice}
+              />
+            </div>
           </div>
-          <div className="shopbody-filter-submit">Filter</div>
+          <div className="shopbody-filter-submit" onClick={handleChangePrice}>
+            Filter
+          </div>
         </div>
 
         <div className="shopbody-main">
@@ -177,14 +233,16 @@ export default function ShopBody() {
           {currentTab === 1 &&
             (isLoading ? (
               <Loading backgroundColor="black" />
+            ) : listProduct.length === 0 ? (
+              <div>No product</div>
             ) : (
               <div className="shopbody-products">
                 <Container fluid="true">
                   <Row>
                     {listProduct.map((item, index) => {
                       return (
-                        <Col md="4" lg="3">
-                          <ProductItem key={item.id} product={item} />
+                        <Col md="4" lg="3" key={index}>
+                          <ProductItem product={item} />
                         </Col>
                       );
                     })}

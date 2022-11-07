@@ -21,14 +21,34 @@ $color-white: #fff;
             }
 
             &-catelist {
-                color: $color-gray;
                 font-size: 16px;
                 font-weight: 400;
                 margin-top: 15px;
                 margin-bottom: 40px;
+                cursor: pointer;
 
                 div {
                     margin: 10px 0;
+                    color: $color-gray;
+                    transition: 0.1s ease-in;
+
+                    &:hover {
+                        color: #000 !important;
+                    }
+                }
+            }
+
+            &-range {
+                margin: 20px 0;
+                &__item {
+                    label {
+                        display: block;
+                        margin: 5px 0;
+                    }
+                    input {
+                        padding: 5px 12px;
+                        width: 100%;
+                    }
                 }
             }
 
@@ -40,12 +60,12 @@ $color-white: #fff;
             }
 
             &-submit {
-                width: 85%;
                 background-color: $color-black;
                 color: $color-white;
-                padding: 12px 18px;
+                padding: 8px 14px;
                 text-align: center;
                 opacity: 0.85;
+                cursor: pointer;
 
                 &:hover {
                     opacity: 1;

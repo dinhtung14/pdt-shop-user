@@ -14,6 +14,7 @@ import { getUser } from 'features/Auth/authSlice';
 import ScrollToTop from 'components/ScrollToTop';
 import NotFound from 'components/NotFound';
 import Checkout from "./pages/Checkout";
+import SearchProduct from 'pages/SearchProduct';
 
 function App() {
     const dispatch = useDispatch();
@@ -38,6 +39,7 @@ function App() {
                     <Route path="/contact" component={Contact}></Route>
                     <Route path="/team" component={Team}></Route>
                     <Route path="/user" component={Auth} />
+                    <Route path="/search" component={SearchProduct} />
                     <Route component={NotFound} />
                 </Switch>
             </div>

@@ -4,6 +4,7 @@ import Loading from 'components/Loading/Loading'
 import NotFound from 'components/NotFound'
 import ProductDetail from 'features/Product/components/ProductDetail/ProductDetail'
 import ProductReview from 'features/Product/components/ProductReview/ProductReview'
+import Footer from 'layout/Footer/Footer'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -43,6 +44,7 @@ export default function Product(props) {
                 <Header />
                 <ProductDetail product={product} />
                 <ProductReview />
+                <Footer />
             </div>
         );
     

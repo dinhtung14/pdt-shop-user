@@ -75,7 +75,9 @@ function Header() {
                     </a>
                 </div>
                 <div className="header-container-right">
-                    <div className="cart"><FaSearch/></div>
+                    <div className="cart">
+                        <Link to="/search"><FaSearch /></Link>
+                    </div>
                     <div className="cart"><Link to='/user'><FaUser/></Link></div>
                     <div className="cart">
                         <Link to="/sober/cart"><FaCartPlus/></Link>

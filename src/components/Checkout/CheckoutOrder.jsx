@@ -18,6 +18,7 @@ export default function CheckoutOrder() {
     };
 
     fetchCarts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const totalPrice = carts.reduce((acc, cur) => {

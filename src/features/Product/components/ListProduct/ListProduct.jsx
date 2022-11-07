@@ -25,9 +25,7 @@ export default function ListProduct({ product, onIncreasePage }) {
                             {product.map((item, index) => {
                                 return (
                                     <Col sm="4" lg="2" key={index}>
-                                        <ProductItem
-                                            product={item}
-                                        />
+                                        <ProductItem product={item} />
                                     </Col>
                                 )
                             })}
