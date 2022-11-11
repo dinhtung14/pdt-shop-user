@@ -8,10 +8,10 @@ import {
 import './productDetail.scss'
 import { Link } from 'react-router-dom'
 import cartApi from 'api/cartApi'
+import { toast } from 'react-toastify'
 
 
-export default function ProductDetail({product}) {
-
+export default function ProductDetail({ product }) {
     const [countCart, setCountCart] = useState(1);
     const [imgIndex, setImgIndex] = useState(0);
     const [listImage ] = useState(() => {
@@ -20,11 +20,12 @@ export default function ProductDetail({product}) {
 
     const cartClick = async () => {
         try {
-            const cart = await cartApi.add({ productId: product._id, quantity: countCart })
-            console.log(cart);
-
+            const res = await cartApi.add({ productId: product._id, quantity: countCart })
+            if (res.success === true) {
+                toast.success("Add to cart successfully");
+            }
         } catch (error) {
-            console.log(error);
+            toast.error("Error");
         }   
     }
 
@@ -42,7 +43,7 @@ export default function ProductDetail({product}) {
             <div className="product-leave">
                 <Link to="/" className="product-link">Home</Link>
                 <FaAngleRight className="arrow"/>
-                <Link to="/" className="product-link">Man</Link>
+                <Link to="/" className="product-link">{product?.category?.name}</Link>
                 <FaAngleRight className="arrow"/>
                 <span className="product-name-first">{product.name}</span>
             </div>
@@ -146,7 +147,7 @@ export default function ProductDetail({product}) {
                     <div className="product-info-line"></div>
                     <div className="product-info-cate">
                         <span>Category: </span>
-                        <span>Man</span>
+                        <span>{product?.category?.name}</span>
                     </div>
                     <div className="product-info-line"></div>
                     <div className="product-info-social">

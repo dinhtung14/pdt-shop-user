@@ -7,6 +7,7 @@ import Loading from "../../Loading/Loading";
 import {Link, useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {deleteWishList, getAllCarts} from "../CartSlice";
+import { toast } from 'react-toastify';
 
 export default function Wishlist(props) {
   const dispatch = useDispatch();
@@ -17,22 +18,19 @@ export default function Wishlist(props) {
   const handleAddToCart = async ({_id, product}) => {
     try {
       setIsCartLoading(_id);
-
       await cartApi.add({ productId: product._id, quantity: 1 });
-
       await dispatch(getAllCarts());
-
+      toast.success("Add to cart successfully");
       setIsCartLoading(null);
-
     } catch (error) {
-      console.log(error.message);
+      toast.error("Error");
       history.push('/user')
     }
   }
 
   const handleDelete = async (id) => {
     try {
-      await dispatch(deleteWishList({id}));
+      await dispatch(deleteWishList({ id }));
     } catch (error) {
       console.log(error.message);
       history.push('/user')
@@ -57,13 +55,13 @@ export default function Wishlist(props) {
                     </div>
                     <div className="wishlist_price">${ numberFormat(item.product.price) }</div>
                     <div className="wishlist_action">
-                      <a href="#" className="button_checkout" onClick={() => handleAddToCart(item)}>
+                      <p className="button_checkout" onClick={() => handleAddToCart(item)}>
                         <span className="button_checkout-subtotal">
                           {
                             isCartLoading === item._id ? <Loading backgroundColor="#fff" /> : <span>Add to cart</span>
                           }
                         </span>
-                      </a>
+                      </p>
                     </div>
                   </div>
                 );
