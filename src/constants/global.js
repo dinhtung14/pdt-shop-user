@@ -101,3 +101,6 @@ export const LOCAL_STORAGE = {
 
 export const DEFAULT_PAGE = 1;
 export const LIMIT = 12;
+export const CURRENCY = {
+    USD: "USD"
+}

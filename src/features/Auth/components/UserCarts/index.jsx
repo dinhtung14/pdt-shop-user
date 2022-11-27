@@ -58,7 +58,7 @@ function UserCarts(props) {
     const body = isLoading ? <Loading backgroundColor="black" /> : 
         !carts.length ? (
             <div className="user-carts">
-                <p>You have not added any products to your cart yet. <Link to='/'><i>Go to the shop</i></Link></p>
+                <p className="goto-shop">You have not added any products to your cart yet. <Link to='/'><i>Go to the shop</i></Link></p>
             </div>
         ) : (
             <div className="user-carts" >

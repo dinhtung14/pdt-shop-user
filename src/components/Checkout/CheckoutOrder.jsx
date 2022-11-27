@@ -5,15 +5,14 @@ import {numberFormat} from "utils/common";
 
 export default function CheckoutOrder() {
   const dispatch = useDispatch();
-
-  const carts  = useSelector(state => state.carts.cartList)
+  const carts = useSelector(state => state.carts.cartList);
 
   useEffect(() => {
     const fetchCarts = async () => {
       try {
         await dispatch(getAllCarts());
       } catch (error) {
-        console.log(error.message);
+        return;
       }
     };
 
@@ -23,7 +22,6 @@ export default function CheckoutOrder() {
 
   const totalPrice = carts.reduce((acc, cur) => {
     acc += cur.product.price;
-
     return acc;
   }, 0);
 
@@ -32,15 +30,22 @@ export default function CheckoutOrder() {
       <h3>Your order</h3>
       <div className="checkout__form__body">
         <table>
+          <thead>
+            <tr>
+              <th>Product name</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
           <tbody>
             {
               carts.map((item, key) => ((
                 <tr key={key}>
-                  <td className="product-name">
+                  <td style={{ maxWidth: 200 }}>
                     { item.product.name }
                   </td>
-                  <td className="product-quantity">
-                    ×{item.quantity}
+                  <td>
+                    × {item.quantity}
                   </td>
                   <td>${ numberFormat(item.product.price) }</td>
                 </tr>

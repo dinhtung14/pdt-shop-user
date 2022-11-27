@@ -3,6 +3,9 @@
 .user-carts {
     min-height: 400px;
     margin: 40px 0;
+    .goto-shop {
+        text-align: center;
+    }
 
     .row {
         border-bottom: 1px solid $border-color-grey;

@@ -75,6 +75,16 @@ export const addOrder = createAsyncThunk(ENDPOINT.order.addOrder, async (params,
   return response;
 });
 
+export const orderPaymentPaypal = createAsyncThunk("/payment/paypal", async (params, thunkAPI) => {
+  const response = await orderApi.paymentPaypal(params.body);
+  if (response) {
+    thunkAPI.dispatch(setCarts([]));
+    window.open(response?.links[1].href, "_blank");
+  }
+
+  return response;
+});
+
 const initialProduct = {
   wishList: [],
   cartList: [],
@@ -94,6 +104,10 @@ const cartSlice = createSlice ({
     setCarts: (state, action) => {
       state.cartList = action.payload;
     },
+    clearCarts: (state) => {
+      state.cartList = [];
+      state.countCart = 0;
+    },
     removeCart: (state, action) => {
       state.cartList = state.cartList.filter(item => item._id !== action.payload);
     },
@@ -104,5 +118,5 @@ const cartSlice = createSlice ({
 })
 const { reducer, actions } = cartSlice;
 
-export const { setWishList, removeWishList, setCarts, removeCart, setCountCart } = actions;
+export const { setWishList, removeWishList, setCarts, removeCart, setCountCart, clearCarts } = actions;
 export default reducer;

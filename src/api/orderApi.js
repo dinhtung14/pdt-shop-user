@@ -10,8 +10,11 @@ const orderApi = {
     } ,
     getOrder: (id) => {
         const url = `${ENDPOINT.order.getOrder}/${id}`;
-        
         return axiosClient.get(url);
+    },
+    paymentPaypal: (data) => {
+        const url = `pay`;
+        return axiosClient.post(url, data);
     }
 };
 

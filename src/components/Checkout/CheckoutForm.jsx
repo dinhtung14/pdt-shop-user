@@ -1,27 +1,26 @@
-import React, {useEffect, useReducer, useState} from 'react';
-import { FormGroup } from 'reactstrap';
+import React, { useEffect, useState } from "react";
+import { FormGroup } from "reactstrap";
 import Loading from "../Loading/Loading";
-import {useDispatch, useSelector} from "react-redux";
-import {addOrder, getAllCarts} from "../Cart/CartSlice";
-import {useHistory} from "react-router-dom";
-import { getUser } from 'features/Auth/authSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { addOrder, getAllCarts, orderPaymentPaypal } from "../Cart/CartSlice";
+import { useHistory } from "react-router-dom";
+import { getUser } from "features/Auth/authSlice";
+import { FaCcPaypal } from "react-icons/fa";
+import { MdPayment } from "react-icons/md";
+import { toast } from "react-toastify";
+import { CURRENCY } from "constants/global";
 
 export default function CheckoutForm() {
-  const [isBtnLoading, setBtnLoading] = useState(false);
-  const [errorSubmit, setErrorSubmit] = useState('');
-
-  const formReducer = (state, event) => {
-    return {
-      ...state,
-      [event.target.name]: event.target.value
-    }
-  }
-
-  const [formData, setFormData] = useReducer(formReducer, {});
-
   const dispatch = useDispatch();
-
-  const carts  = useSelector(state => state.carts.cartList)
+  const history = useHistory();
+  const carts = useSelector((state) => state.carts.cartList);
+  const [isBtnLoading, setBtnLoading] = useState(false);
+  const [isPaymentPaypalLoading, setIsPaymentPaypalLoading] = useState(false);
+  const [errorSubmit, setErrorSubmit] = useState("");
+  const [values, setValues] = useState({
+    address: "",
+    phoneNumber: "",
+  });
 
   useEffect(() => {
     const fetchCarts = async () => {
@@ -35,29 +34,59 @@ export default function CheckoutForm() {
     fetchCarts();
   }, [dispatch]);
 
-  console.log({errorSubmit});
+  const handleChange = (e) => {
+    setValues((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
-  const history = useHistory();
-
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
     setBtnLoading(true);
-
     try {
-      const checkoutData = await dispatch(addOrder({ body: { ...formData, carts } }));
-
-      if (checkoutData.payload.success) {
+      if (values.address === "" || values.phoneNumber === "") {
+        setErrorSubmit("Please enter full information.");
+        return;
+      }
+      const res = await dispatch(addOrder({ body: { ...values, carts } }));
+      if (res?.payload.success) {
         await dispatch(getUser());
-        history.push('/');
+        setErrorSubmit("");
+        toast.success("Payment successfully");
+        history.push("/user/orders");
       } else {
-        setBtnLoading(false);
-        setErrorSubmit(checkoutData.payload.message);
+        toast.error(res?.payload.message);
       }
     } catch (error) {
       console.log(error.message);
-    } 
-  }
+    } finally {
+      setBtnLoading(false);
+    }
+  };
+
+  const handlePaymentWithPayment = async () => {
+    try {
+      setIsPaymentPaypalLoading(true);
+      const data = carts.map(cart => {
+        return {
+          name: cart?.product.name,
+          quantity: cart?.quantity,
+          price: cart?.product.price,
+          currency: CURRENCY.USD
+        }
+      })
+      await dispatch(orderPaymentPaypal({ body: data }));
+      // if (res?.payload?.id) {
+      //   history.push("/user/orders");
+      //   window.open(res?.payload?.links[1].href, "_blank");
+      // }
+    } catch (error) {
+      toast.error("Error");
+    } finally {
+      setIsPaymentPaypalLoading(false);
+    }
+  };
 
   return (
     <div className="checkout__form">
@@ -68,31 +97,55 @@ export default function CheckoutForm() {
             <label className="required">Address</label>
             <input
               className="input-text"
-              name="address"
               placeholder="Enter the address"
-              onInput={setFormData}
+              name="address"
+              value={values.address}
+              onChange={handleChange}
             />
           </p>
-            
           <p className="checkout__form__row">
             <label className="required">Phone number</label>
             <input
               className="input-text"
-              name="phoneNumber"
               placeholder="Enter the phone"
-              onInput={setFormData}
+              name="phoneNumber"
+              value={values.phoneNumber}
+              onChange={handleChange}
             />
           </p>
-          {
-            errorSubmit && <p style={{ color: 'red', fontSize: '12px' }}>{ errorSubmit }</p>
-          }
+          {errorSubmit && (
+            <p style={{ color: "red", fontSize: "12px" }}>{errorSubmit}</p>
+          )}
           <FormGroup>
-            <button type="submit" className="checkout__form__submit--button">
-              { isBtnLoading ? <Loading /> : 'Place order' }
-            </button>
+            <div className="checkout__form__btn">
+              <button type="submit" className="checkout__form__btn-order">
+                {isBtnLoading ? (
+                  <Loading />
+                ) : (
+                  <div>
+                    <MdPayment style={{ fontSize: 24, marginRight: 5 }} />{" "}
+                    <span>Place order</span>
+                  </div>
+                )}
+              </button>
+              <button
+                type="button"
+                className="checkout__form__btn-paypal"
+                onClick={handlePaymentWithPayment}
+              >
+                {isPaymentPaypalLoading ? (
+                  <Loading />
+                ) : (
+                  <div>
+                    <FaCcPaypal style={{ fontSize: 24, marginRight: 5 }} />{" "}
+                    <span>Payment with Paypal</span>
+                  </div>
+                )}
+              </button>
+            </div>
           </FormGroup>
         </form>
       </div>
     </div>
-  )
+  );
 }
