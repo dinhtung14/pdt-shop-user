@@ -73,7 +73,7 @@ function OrderList(props) {
                                         <p>${order.totalAmount} for {quantity} { quantity > 1 ? 'items' : 'item'}</p>
                                     </Col>
                                     <Col md="2">
-                                        <p><Link to={`${match.url}/${order._id}`}>View</Link></p>
+                                        <p><Link to={`${match.url}/${order._id}`} style={{ textDecoration: "underline", color: "#2222ef"}}>View</Link></p>
                                     </Col>
                                 </Row>
                             )

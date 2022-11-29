@@ -1,7 +1,13 @@
 @import "assets/styles/variables";
 
 .order-details {
-
+    .back {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        text-decoration: underline;
+        cursor: pointer;
+    }
     &__main {
         padding: 30px 0;
         margin: 16px 0;

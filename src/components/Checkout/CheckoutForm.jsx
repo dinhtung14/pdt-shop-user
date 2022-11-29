@@ -8,7 +8,6 @@ import { getUser } from "features/Auth/authSlice";
 import { FaCcPaypal } from "react-icons/fa";
 import { MdPayment } from "react-icons/md";
 import { toast } from "react-toastify";
-import { CURRENCY } from "constants/global";
 
 export default function CheckoutForm() {
   const dispatch = useDispatch();
@@ -68,19 +67,15 @@ export default function CheckoutForm() {
   const handlePaymentWithPayment = async () => {
     try {
       setIsPaymentPaypalLoading(true);
-      const data = carts.map(cart => {
-        return {
-          name: cart?.product.name,
-          quantity: cart?.quantity,
-          price: cart?.product.price,
-          currency: CURRENCY.USD
-        }
-      })
-      await dispatch(orderPaymentPaypal({ body: data }));
-      // if (res?.payload?.id) {
-      //   history.push("/user/orders");
-      //   window.open(res?.payload?.links[1].href, "_blank");
-      // }
+      if (values.address === "" || values.phoneNumber === "") {
+        setErrorSubmit("Please enter full information.");
+        return;
+      }
+      const res = await dispatch(orderPaymentPaypal({ body: { ...values, carts } }));
+      if (res?.payload?.id) {
+        history.push("/user");
+        window.open(res?.payload?.links[1].href, "_blank");
+      }
     } catch (error) {
       toast.error("Error");
     } finally {

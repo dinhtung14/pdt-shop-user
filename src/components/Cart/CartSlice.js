@@ -79,7 +79,7 @@ export const orderPaymentPaypal = createAsyncThunk("/payment/paypal", async (par
   const response = await orderApi.paymentPaypal(params.body);
   if (response) {
     thunkAPI.dispatch(setCarts([]));
-    window.open(response?.links[1].href, "_blank");
+    // window.open(response?.links[1].href, "_blank");
   }
 
   return response;

@@ -3,12 +3,15 @@ import Loading from 'components/Loading/Loading';
 import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useHistory } from 'react-router-dom';
 import { Col, Container, Row } from 'reactstrap';
 import './OrderDetails.scss';
 import { MdPermIdentity, MdRoom, MdPhone, MdMailOutline } from 'react-icons/md';
+import { PAYMENT_METHOD_TYPE } from 'constants/global';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
 
 function OrderDetails(props) {
+    const history = useHistory();
     const [isLoading, setIsLoading] = useState(true);
     const [order, setOrder] = useState({});
     const { orderId } = useParams();
@@ -18,7 +21,6 @@ function OrderDetails(props) {
             try {
                 setIsLoading(true);
                 const orderData = await orderApi.getOrder(orderId);
-                console.log(orderData);
 
                 if(orderData.success) {
                     setOrder(orderData.order);
@@ -43,6 +45,7 @@ function OrderDetails(props) {
             </div>
         ) : (
             <div className="order-details">
+                <div className='back' onClick={() => history.goBack()}><AiOutlineArrowLeft style={{ marginRight: 5 }}/> Back</div>
                 <div className="order-details__main">
                     <h3>Order details</h3>
                     <div className="order-details__main__table">
@@ -90,7 +93,7 @@ function OrderDetails(props) {
                                     <p>PAYMENT METHOD</p>
                                 </Col>
                                 <Col md="6">
-                                    <p>Transfer</p>
+                                    <p>{PAYMENT_METHOD_TYPE[order.payment_method]}</p>
                                 </Col>
                             </Row>
                             <Row className="order-details__main__table__bolder">

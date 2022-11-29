@@ -104,3 +104,8 @@ export const LIMIT = 12;
 export const CURRENCY = {
     USD: "USD"
 }
+
+export const PAYMENT_METHOD_TYPE = {
+    onDelivery: "Payment on delivery",
+    paypal: "Paypal"
+}
