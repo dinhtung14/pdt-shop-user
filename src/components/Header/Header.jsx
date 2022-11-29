@@ -80,7 +80,8 @@ function Header() {
                     </div>
                     <div className="cart"><Link to='/user'><FaUser/></Link></div>
                     <div className="cart">
-                        <Link to="/sober/cart"><FaCartPlus/></Link>
+                        {/* <Link to="/sober/cart"><FaCartPlus/></Link> */}
+                        <Link to="/user/carts"><FaCartPlus/></Link>
                         <span className="cart-counter">{countCart}</span>
                     </div>
                 </div>

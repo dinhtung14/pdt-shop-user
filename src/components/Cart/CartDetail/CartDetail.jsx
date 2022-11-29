@@ -10,8 +10,7 @@ export default function CartDetail(props) {
   const dispatch = useDispatch();
 
   const totalPrice = props.data.reduce((acc, cur) => {
-    acc += cur.product.price;
-
+    acc += cur.product.price * cur.quantity;
     return acc;
   }, 0) || 0;
 

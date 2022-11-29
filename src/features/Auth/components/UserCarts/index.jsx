@@ -1,11 +1,13 @@
 import cartApi from 'api/cartApi';
 import Loading from 'components/Loading/Loading';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Button, Col, Container, Row } from 'reactstrap';
+import { numberFormat } from 'utils/common';
 import './UserCarts.scss';
 
 function UserCarts(props) {
+    const history = useHistory();
     const [isLoading, setIsLoading] = useState(true);
     const [carts, setCarts] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,6 +57,12 @@ function UserCarts(props) {
         }
     }
 
+    const totalPrice = carts.reduce((acc, cur) => {
+        acc += cur.product.price * cur.quantity * (100 - cur.product.discount) / 100;
+        return acc;
+      }, 0);
+    
+
     const body = isLoading ? <Loading backgroundColor="black" /> : 
         !carts.length ? (
             <div className="user-carts">
@@ -89,8 +97,9 @@ function UserCarts(props) {
                                             </div>
                                             <p>{cart.product.name}</p>
                                         </Col>
-                                        <Col md="2">
-                                            <p>${cart.product.price * (100 - cart.product.discount) / 100}</p>
+                                        <Col md="2" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start'}}>
+                                            <p>${cart.product.price}</p>
+                                            <p style={{ color: 'gray', fontSize: 14 }}> Discount: {cart.product.discount}%</p>
                                         </Col>
                                         <Col md="3" className="user-carts__item__quantity" >
                                             <p>
@@ -105,7 +114,6 @@ function UserCarts(props) {
                                         </Col>
                                     </Row>
                                 );
-                            
                             return null;
                         })
                     }
@@ -113,9 +121,12 @@ function UserCarts(props) {
                         <Button type="submit" className="user-carts__btn-submit" onClick={handleUpdateCart}>
                             { isSubmitting ? <Loading /> : 'UPDATE CART' }
                         </Button>
+                        <Button className="user-carts__btn-submit" onClick={() => history.push("/sober/checkout")}>
+                        <span>${ numberFormat(totalPrice) }</span> | CHECKOUT
+                        </Button>
                     </div>
 
-                    <div className="user-carts__total">
+                    {/* <div className="user-carts__total">
                         <h3>Checkout carts</h3>
                         <div className="user-carts__total__card">
                             <Container>
@@ -124,7 +135,7 @@ function UserCarts(props) {
                                         <p>SUBTOTAL</p>
                                     </Col>
                                     <Col md="7">
-                                        <p>${carts.reduce((total, cart) => total + cart.quantity * cart.product.price * (100 - cart.product.discount) / 100, 0)}</p>
+                                        <p>${carts.reduce((total, cart) => total + cart.quantity * cart.product.price, 0)}</p>
                                     </Col>
                                 </Row>
                                 <Row>
@@ -144,13 +155,13 @@ function UserCarts(props) {
                                     </Col>
                                 </Row>
                                 <div className="wrapper-btn">
-                                    <Button className="user-carts__btn-submit" onClick={handleUpdateCart}>
+                                    <Button className="user-carts__btn-submit" onClick={() => history.push("/sober/checkout")}>
                                         PROCEED TO CHECKOUT
                                     </Button>
                                 </div>
                             </Container>
                         </div>
-                    </div>
+                    </div> */}
                     
                 </Container>
             </div>

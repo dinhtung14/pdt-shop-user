@@ -21,20 +21,24 @@ export default function CheckoutOrder() {
   }, []);
 
   const totalPrice = carts.reduce((acc, cur) => {
-    acc += cur.product.price;
+    acc += cur.product.price * cur.quantity * (100 - cur.product.discount) / 100;
     return acc;
   }, 0);
 
   return (
     <div className="checkout__form">
-      <h3>Your order</h3>
+      <h3>Your order
+        (<span style={{ color: 'gray', fontSize: 18 }}>
+          {carts.length} {`${carts.length > 1 ? 'products' : 'product'}`}
+        </span>)
+      </h3>
       <div className="checkout__form__body">
         <table>
           <thead>
             <tr>
               <th>Product name</th>
-              <th>Quantity</th>
-              <th>Price</th>
+              <th>Amount</th>
+              <th>Subtotal</th>
             </tr>
           </thead>
           <tbody>
@@ -43,20 +47,29 @@ export default function CheckoutOrder() {
                 <tr key={key}>
                   <td style={{ maxWidth: 200 }}>
                     { item.product.name }
+                    <p style={{ color: 'gray', fontSize: 14 }}> Discount: {item.product.discount}%</p>
                   </td>
                   <td>
-                    × {item.quantity}
+                    {item.quantity} × ${numberFormat(item.product.price)}
                   </td>
-                  <td>${ numberFormat(item.product.price) }</td>
+                  <td>${ numberFormat(item.product.price * item.quantity * (100 - item.product.discount)/100) }</td>
                 </tr>
               )))
             }
           </tbody>
           <tfoot>
             <tr>
+              <th>Subtotal</th>
+              <th>${numberFormat(totalPrice)}</th>
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <th>Freeship</th>
+            </tr>
+            <tr style={{ color: 'red' }}>
               <th>Total</th>
-              <th>&nbsp;</th>
-              <th>${ numberFormat(totalPrice) }</th>
+              {/* <th>&nbsp;</th> */}
+              <th>${numberFormat(totalPrice)}</th>
             </tr>
           </tfoot>
         </table>
