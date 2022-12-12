@@ -9,9 +9,11 @@ import './productDetail.scss'
 import { Link } from 'react-router-dom'
 import cartApi from 'api/cartApi'
 import { toast } from 'react-toastify'
-
+import favoriteProductApi from 'api/favoriteProductApi'
+import { useSelector } from 'react-redux'
 
 export default function ProductDetail({ product }) {
+    const user = useSelector(state => state.auth.user)
     const [countCart, setCountCart] = useState(1);
     const [imgIndex, setImgIndex] = useState(0);
     const [listImage ] = useState(() => {
@@ -20,6 +22,10 @@ export default function ProductDetail({ product }) {
 
     const cartClick = async () => {
         try {
+            if (countCart > product.quantity) {
+                toast.error("The number of products must be less than the quantity in stock");
+                return;
+            }
             const res = await cartApi.add({ productId: product._id, quantity: countCart })
             if (res.success === true) {
                 toast.success("Add to cart successfully");
@@ -36,6 +42,15 @@ export default function ProductDetail({ product }) {
             return setImgIndex(listImage.length - 1);
         
         setImgIndex(index);
+    }
+
+    const addWishlist = async () => {
+        try {
+            await favoriteProductApi.add({ product: product._id, user: user._id });
+            toast.success("Add favorite product");
+        } catch (error) {
+            return;
+        }
     }
     
     return (
@@ -98,7 +113,10 @@ export default function ProductDetail({ product }) {
                        {product.name}
                     </div>
                     <div className="product-info-des">
-                        {product.description}
+                        Description: {product.description}
+                    </div>
+                    <div className="product-info-des">
+                        Quantity: {product.quantity}
                     </div>
                     <div className="product-info-vote">
                         <ReactStars
@@ -112,7 +130,6 @@ export default function ProductDetail({ product }) {
                     <div className="product-info-price">
                         ${product.price}.00
                     </div>
-
                     <div className="product-info-cart">
                         <div className="count-cart">
                             <div 
@@ -130,7 +147,7 @@ export default function ProductDetail({ product }) {
                             </div>
                             <div 
                                 className="count-cart-item right"
-                                onClick={() => setCountCart(countCart+1)}
+                                onClick={() => setCountCart(countCart + 1) }
                             >
                                 <FaPlus/>
                             </div>
@@ -139,7 +156,7 @@ export default function ProductDetail({ product }) {
                             <FaCartPlus/>
                             <span>Add to cart</span>
                         </div>
-                        <div className="product-info-wishlist">
+                        <div className="product-info-wishlist" onClick={addWishlist}>
                             <FaRegHeart/>
                         </div>
                     </div>
