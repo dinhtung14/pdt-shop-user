@@ -54,7 +54,7 @@ export default function Search() {
   const handleSearchProduct = () => {
     const searchProduct = [];
     for (let i in productItem) {
-      if (productItem[i]?.name.toLowerCase().includes(searchValue)) {
+      if (productItem[i]?.name.toLowerCase().includes(searchValue?.toLowerCase())) {
         searchProduct.push(productItem[i]);
       }
     }
@@ -85,7 +85,7 @@ export default function Search() {
         {loading ? (
           <CircularProgress size={20} />
         ) : product.length === 0 ? (
-          <div style={{ textAlign: "center", fontSize: "24px" }}>No product</div>
+          <div style={{ textAlign: "center", fontSize: "24px", marginBottom: 50 }}>No product</div>
         ) : (
           <div className="search-bottom">
               <Row>

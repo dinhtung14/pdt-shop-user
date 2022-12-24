@@ -8,12 +8,13 @@ import { useDispatch } from 'react-redux';
 import authApi from 'api/authApi';
 import { LOCAL_STORAGE } from 'constants/global';
 import { getUser } from 'features/Auth/authSlice';
-import { useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 function LoginForm(props) {
     const { select } = props;
     const dispatch = useDispatch();
     const match = useRouteMatch();
+    const history = useHistory();
 
     const initialValues = {
         username: '',
@@ -56,10 +57,9 @@ function LoginForm(props) {
                 localStorage.setItem(LOCAL_STORAGE.refreshToken, loginData.refreshToken);
 
                 await dispatch(getUser());
+                history.push("/");
 
             } else {
-                console.log(loginData.message);
-                
                 actions.resetForm({
                     values: {
                         username: values.username,
@@ -72,14 +72,11 @@ function LoginForm(props) {
                         username: true,
                     },
                 });
-
             }
         } catch (error) {
             console.log(error);
         }
-
     };
-
 
     return (
         <div className="login-form form-login" style={style}>

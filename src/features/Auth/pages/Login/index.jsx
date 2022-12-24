@@ -54,8 +54,6 @@ function Login(props) {
                 </Switch>
             </div>
         );
-        
-
     return body;
 }
 
