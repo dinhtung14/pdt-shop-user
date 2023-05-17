@@ -9,7 +9,7 @@ const orderApi = {
         return axiosClient.get(ENDPOINT.order.getOrderUser);
     } ,
     getOrder: (id) => {
-        const url = `${ENDPOINT.order.getOrder}/${id}`;
+        const url = `/order/user/${id}`;
         return axiosClient.get(url);
     },
     paymentPaypal: (data) => {

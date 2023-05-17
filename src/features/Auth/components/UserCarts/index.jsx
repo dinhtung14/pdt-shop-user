@@ -5,6 +5,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { Button, Col, Container, Row } from 'reactstrap';
 import { numberFormat } from 'utils/common';
 import './UserCarts.scss';
+import { toast } from 'react-toastify';
 
 function UserCarts(props) {
     const history = useHistory();
@@ -35,8 +36,13 @@ function UserCarts(props) {
 
     const handleChangeQty = (cartId, qty)  => {
         const newCarts = carts.map((cart) => {
-            if(cart._id === cartId) 
-                cart.quantity = qty;
+            if (cart._id === cartId) {
+                if (qty > cart.product.quantity) {
+                    toast.error("The number of products must be less than the quantity in stock");
+                } else {
+                    cart.quantity = qty;
+                }
+            }
             return cart;
         });
 

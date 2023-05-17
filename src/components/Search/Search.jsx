@@ -66,7 +66,7 @@ export default function Search() {
       <div className="search">
         <div className="search-main">
           <div className="search-main-form">
-            <span className="search-title">Sober</span>
+            <span className="search-title">PDT Shop</span>
             <div className="search-input">
               <input
                 type="text"

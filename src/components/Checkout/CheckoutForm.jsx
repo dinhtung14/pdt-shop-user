@@ -17,6 +17,7 @@ export default function CheckoutForm() {
   const [isPaymentPaypalLoading, setIsPaymentPaypalLoading] = useState(false);
   const [errorSubmit, setErrorSubmit] = useState("");
   const [values, setValues] = useState({
+    fullname: "",
     address: "",
     phoneNumber: "",
   });
@@ -44,7 +45,7 @@ export default function CheckoutForm() {
     event.preventDefault();
     setBtnLoading(true);
     try {
-      if (values.address === "" || values.phoneNumber === "") {
+      if (values.fullname === "" || values.address === "" || values.phoneNumber === "") {
         setErrorSubmit("Please enter full information.");
         return;
       }
@@ -67,7 +68,7 @@ export default function CheckoutForm() {
   const handlePaymentWithPayment = async () => {
     try {
       setIsPaymentPaypalLoading(true);
-      if (values.address === "" || values.phoneNumber === "") {
+      if (values.fullname === "" || values.address === "" || values.phoneNumber === "") {
         setErrorSubmit("Please enter full information.");
         return;
       }
@@ -88,6 +89,16 @@ export default function CheckoutForm() {
       <h3>Billing Details</h3>
       <div className="checkout__form__body">
         <form onSubmit={handleSubmit}>
+          <p className="checkout__form__row">
+            <label className="required">Fullname</label>
+            <input
+              className="input-text"
+              placeholder="Enter the fullname"
+              name="fullname"
+              value={values.fullname}
+              onChange={handleChange}
+            />
+          </p>
           <p className="checkout__form__row">
             <label className="required">Address</label>
             <input

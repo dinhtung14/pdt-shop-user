@@ -70,9 +70,7 @@ function Header() {
                     })} 
                 </div>
                 <div className="header-container-logo">
-                    <a href="/">
-                        <img src="https://demo.uix.store/sober/wp-content/themes/sober/images/logo.svg" alt="logo" />
-                    </a>
+                    <a href="/">PDT Shop</a>
                 </div>
                 <div className="header-container-right">
                     <div className="cart">

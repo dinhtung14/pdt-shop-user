@@ -72,7 +72,7 @@ export const ENDPOINT = {
         addOrder: '/order',
         getOrderUser: '/order/user',
         getOrderAdmin: '/order/admin',
-        getOrder: '/order', // /order/:id
+        getOrder: '/order/user', // /order/user/:id
     },
     cart: {
         add: '/cart',
@@ -107,5 +107,5 @@ export const CURRENCY = {
 
 export const PAYMENT_METHOD_TYPE = {
     onDelivery: "Payment on delivery",
-    paypal: "Paypal"
+    onPaypal: "Paypal"
 }

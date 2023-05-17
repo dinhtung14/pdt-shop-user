@@ -27,7 +27,7 @@ export default function Footer() {
                             </ul>
                         </div>
                         <div className="footer-col">
-                            <h4>Sober shop</h4>
+                            <h4>PDT shop</h4>
                             <ul>
                                 <li><a href="/">Man</a></li>
                                 <li><a href="/">Women</a></li>

@@ -7,7 +7,7 @@
     transition: all 0.35s ease-in-out;
 
     .header-container{
-        padding: 30px 0;
+        padding: 15px 0;
         display: flex;
         align-items: center;
 
@@ -54,6 +54,14 @@
         &-logo {
             margin: 0 auto;
             text-align: center;
+
+            & a {
+                text-decoration: none;
+                font-size: 36px;
+                font-weight: bold;
+                text-transform: uppercase;
+                color: #000;
+            }
         }
 
         &-right {
