@@ -29,10 +29,10 @@ function OrderDetails(props) {
             content = "Preparing goods";
             break;
           case "4":
-            content = "Successful delivery";
+            content = "Delivering";
             break;
           case "5":
-            content = "Delivering";
+            content = "Successful delivery";
             break;
           case "6":
             content = "Canceled";
@@ -163,7 +163,7 @@ function OrderDetails(props) {
                                 </Col>
                                 <Col md="6">
                                     <p>
-                                        {order.statusPayment === Number(1) ? "Unpaid" : order.statusPayment === Number(2) ? "Paid" : "Unpaid"}        
+                                        {order.paymentStatus === Number(1) ? "Unpaid" : order.paymentStatus === Number(2) ? "Paid" : "Unpaid"}        
                                     </p>
                                 </Col>
                             </Row>
